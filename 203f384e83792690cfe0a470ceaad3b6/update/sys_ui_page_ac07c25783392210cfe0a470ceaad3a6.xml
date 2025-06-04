@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_ui_page">
+    <sys_ui_page action="INSERT_OR_UPDATE">
+        <category>catalog</category>
+        <client_script><![CDATA[function getFromServer() {
+    var ga = new GlideAjax('GetDataForPage');
+    ga.addParam('sysparm_name', 'getData');
+    ga.getXML(displayData);
+}
+
+function displayData(response) {
+    var answer = response.responseXML.documentElement.getAttribute("answer");
+    var result = JSON.parse(answer);
+    
+    document.getElementById('valueDisplay').textContent = result.count;
+    
+    var now = new Date();
+    document.getElementById('timeDisplay').textContent = now.toLocaleTimeString();
+}
+
+function showConfirmDialog() {
+    if (confirm('Please Click OK To Display Value?')) {
+        getFromServer();
+    } else {
+		// Do nothing
+    }
+}]]></client_script>
+        <description/>
+        <direct>false</direct>
+        <endpoint>x_1755520_scriptin_ChangeValueByAjax.do</endpoint>
+        <html><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin-top: 20px;
+    }
+  </style>
+
+  <h1>Update Field When OK Selected</h1>
+  
+  <button id="myButton" onclick="showConfirmDialog()">Click Me</button>
+  
+  <div id="result">
+    <p>Current Value: <span id="valueDisplay">No Data</span></p>
+    <p>Lasted: <span id="timeDisplay">-</span></p>
+  </div>
+</j:jelly>]]></html>
+        <name>ChangeValueByAjax</name>
+        <processing_script/>
+        <sys_class_name>sys_ui_page</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-06-03 09:01:13</sys_created_on>
+        <sys_id>ac07c25783392210cfe0a470ceaad3a6</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>ChangeValueByAjax</sys_name>
+        <sys_package display_value="Scripting" source="x_1755520_scriptin">203f384e83792690cfe0a470ceaad3b6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Scripting">203f384e83792690cfe0a470ceaad3b6</sys_scope>
+        <sys_update_name>sys_ui_page_ac07c25783392210cfe0a470ceaad3a6</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-06-04 05:55:20</sys_updated_on>
+    </sys_ui_page>
+</record_update>

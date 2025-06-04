@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function() {
+  /* widget controller */
+  var c = this;
+  
+  c.getAttachment = function() {
+    var root = document.querySelectorAll('.sp-page-root');
+    
+    c.server.get({
+      parameter1: root[0].innerHTML, 
+      action: "getAttachment"
+    }).then(function(response) {
+      var a = document.createElement('a');
+      
+      a.href = window.location.origin + 
+               "/sys_attachment.do?sys_id=" + 
+               response.data.sys_id; 
+      a.download = response.data.sys_id;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id/>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>DownloadPDF</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    /* populate the 'data' object */
+    /* e.g., data.table = $sp.getValue('table'); */
+
+    if (input && input.action == "getAttachment") {
+        gs.info("Received Parameter: " + input.parameter1);
+
+        var v = new sn_pdfgeneratorutils.PDFGenerationAPI();
+        var html = input.parameter1;  
+        var number = "0c5f3cece1b12010f877971dea0b1449";
+        var guid = gs.generateGUID();
+        
+        // 调用PDF转换API
+        var result = v.convertToPDF(html, "incident", number, guid);
+        var sys_id = result.attachment_id;
+        
+        // 设置响应数据
+        data.sys_id = sys_id;
+        data.filename = guid;  // 使用生成的GUID作为文件名
+    }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-06-03 08:38:42</sys_created_on>
+        <sys_id>bd3282df83f52210cfe0a470ceaad393</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>DownloadPDF</sys_name>
+        <sys_package display_value="Scripting" source="x_1755520_scriptin">203f384e83792690cfe0a470ceaad3b6</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Scripting">203f384e83792690cfe0a470ceaad3b6</sys_scope>
+        <sys_update_name>sp_widget_bd3282df83f52210cfe0a470ceaad393</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-06-03 08:38:42</sys_updated_on>
+        <template><![CDATA[<div id="myArea"></div>
+<button id="myButton" ng-click="c.getAttachment()" class="my-button">
+  Click Me To Download
+</button>]]></template>
+    </sp_widget>
+</record_update>
