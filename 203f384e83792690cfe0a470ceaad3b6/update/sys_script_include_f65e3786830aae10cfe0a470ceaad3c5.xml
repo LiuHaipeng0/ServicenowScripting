@@ -8,43 +8,31 @@
         <description/>
         <mobile_callable>false</mobile_callable>
         <name>ExcelParse4</name>
-        <sandbox_callable>true</sandbox_callable>
+        <sandbox_callable>false</sandbox_callable>
         <script><![CDATA[var ExcelParse4 = Class.create();
 ExcelParse4.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
-    parseProcess: function() {
-        var currentSysId = this.getParameter('sysparm_sys_id');
-        
+    prepareData: function(row) {
+        myData = {};
+        myData.question1 = row['question1'];
+        myData.question2 = row['question2'];
+        myData.question3 = row['question3'];
+        return myData;
+    },
+
+    getData: function() {
+        var id = this.getParameter('sysparm_id');
+        var myobjArray = [];
+        var attachmentSID = id;
+        var parser = new sn_impex.GlideExcelParser();
         var attachment = new GlideSysAttachment();
-        var getdata = new GlideRecord('sys_attachment');
-		gs.info("getdata:"+ getdata);
-        getdata.addQuery('sys_id', currentSysId);
-        getdata.addQuery('table_name', "ZZ_YYsc_cart_item");
-        getdata.query();
+        var attachmentStream = attachment.getContentStream(attachmentSID);
+        parser.parse(attachmentStream);
         
-        if (getdata.next()) {
-            var attachmentSysID = getdata.sys_id.toString();
-            var attachmentStream = attachment.getContentStream(attachmentSysID);
-            
-            var excelData = new sn_impex.GlideExcelParser();
-            excelData.parse(attachmentStream);
-            
-            var finalArr = [];
-            var headers = excelData.getColumnHeaders();
-            var headers_sys = excelData.getColumnsSys();
-            
-            while (excelData.next()) {
-                var row = excelData.getRow();
-                var tempObj = {};
-                
-                tempObj.question1 = row[headers[0]];
-                tempObj.question2 = row[headers[1]];
-                tempObj.question3 = row[headers[2]];
-                
-                finalArr.push(tempObj);
-            }
-            
-            return JSON.stringify(finalArr);
+        while (parser.next()) {
+            var row = parser.getRow();
+            myobjArray.push(this.prepareData(row));
         }
+        return JSON.stringify(myobjArray);
     },
     type: 'ExcelParse4'
 });]]></script>
@@ -52,13 +40,13 @@ ExcelParse4.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2025-06-12 06:51:46</sys_created_on>
         <sys_id>f65e3786830aae10cfe0a470ceaad3c5</sys_id>
-        <sys_mod_count>7</sys_mod_count>
+        <sys_mod_count>9</sys_mod_count>
         <sys_name>ExcelParse4</sys_name>
         <sys_package display_value="Scripting" source="x_1755520_scriptin">203f384e83792690cfe0a470ceaad3b6</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="Scripting">203f384e83792690cfe0a470ceaad3b6</sys_scope>
         <sys_update_name>sys_script_include_f65e3786830aae10cfe0a470ceaad3c5</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-06-12 07:46:52</sys_updated_on>
+        <sys_updated_on>2025-06-13 08:38:12</sys_updated_on>
     </sys_script_include>
 </record_update>
