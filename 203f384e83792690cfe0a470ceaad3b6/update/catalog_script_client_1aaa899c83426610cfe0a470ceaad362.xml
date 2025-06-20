@@ -15,34 +15,30 @@
         <global>true</global>
         <isolate_script>true</isolate_script>
         <messages/>
-        <name>CatalogRequestLoad3</name>
+        <name>GetSysId3</name>
         <order/>
         <published_ref/>
         <script><![CDATA[function onLoad() {
     // Type appropriate comment here, and begin script below
-    var param = getURLParam("req_item_id");
-    if (param) {
-        var req_item_id = decodeURI(param);
-        var ga = new GlideAjax("CatalogRequestLoadScript3");
-        ga.addParam("sysparm_name", "getReqItemData");
-        ga.addParam("req_item_id", req_item_id);
-        ga.getXMLAnswer(setVars);
-    }
-}
+    var url = top.location.href;
 
-function setVars(response) {
-    var fieldArray = JSON.parse(response);
-    for (var key in fieldArray) {
-        g_form.setValue(key, fieldArray[key]);
+    if (url.indexOf("number") < 0) {
+        return;
     }
-}
 
-function getURLParam(name) {
-    name = name.replace(/[$$]/, "\\[").replace(/[$$]/, "\\]");
-    var regexS = "[\\?&]" + name + "=([^&#]*)";
-    var regex = new RegExp(regexS);
-    var results = regex.exec(window.location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    var value = url.split("number=");
+
+    var ga = new GlideAjax("GetDefaultVariables3");
+    ga.addParam("sysparm_name", "GetDefaultVariablesvalue");
+    ga.addParam("sys_id", value[1]);
+    ga.getXML(setVars);
+
+    function setVars(response) {
+        var returnVariables = response.responseXML.documentElement.getAttribute("answer");
+        var obj = JSON.parse(returnVariables);
+        g_form.clearValue('additional_information');
+        g_form.setValue('additional_information', obj.additional_information);
+    }
 }]]></script>
         <sys_class_name>catalog_script_client</sys_class_name>
         <sys_created_by>admin</sys_created_by>
@@ -50,19 +46,19 @@ function getURLParam(name) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>1aaa899c83426610cfe0a470ceaad362</sys_id>
-        <sys_mod_count>2</sys_mod_count>
-        <sys_name>CatalogRequestLoad3</sys_name>
+        <sys_mod_count>4</sys_mod_count>
+        <sys_name>GetSysId3</sys_name>
         <sys_overrides/>
         <sys_package display_value="Scripting" source="x_1755520_scriptin">203f384e83792690cfe0a470ceaad3b6</sys_package>
         <sys_policy/>
         <sys_scope display_value="Scripting">203f384e83792690cfe0a470ceaad3b6</sys_scope>
         <sys_update_name>catalog_script_client_1aaa899c83426610cfe0a470ceaad362</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-06-06 07:11:46</sys_updated_on>
+        <sys_updated_on>2025-06-18 06:59:40</sys_updated_on>
         <table/>
-        <type/>
+        <type>onLoad</type>
         <ui_type>10</ui_type>
-        <va_supported>false</va_supported>
+        <va_supported>true</va_supported>
         <variable_set/>
         <view/>
     </catalog_script_client>

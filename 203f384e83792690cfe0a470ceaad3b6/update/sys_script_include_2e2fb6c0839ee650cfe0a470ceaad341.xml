@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_1755520_scriptin.resubmitcatalogitem3</api_name>
+        <caller_access/>
+        <client_callable>true</client_callable>
+        <description/>
+        <mobile_callable>false</mobile_callable>
+        <name>resubmitcatalogitem3</name>
+        <sandbox_callable>false</sandbox_callable>
+        <script><![CDATA[var resubmitcatalogitem3 = Class.create();
+resubmitcatalogitem3.prototype = Object.extendsObject(global.AbstractAjaxProcessor, {
+    resubmitcatalogitemdaction: function() {
+        try {
+            // 获取请求参数
+            var ritmID = this.getParameter("sys_id");
+            var taskid = this.getParameter("task_id");
+            var additional_information = this.getParameter("additional_information");
+            
+            // 查询请求项记录
+            var now_GR = new GlideRecord("sc_req_item");
+            now_GR.get(ritmID);
+            
+            // 根据当前状态设置新状态
+            if (now_GR.state == 9) {
+                now_GR.state = 1;
+            } else if (now_GR.state == 3) {
+                now_GR.state = 1;
+            } else {
+                now_GR.state = 2;
+            }
+            
+            // 更新附加信息字段
+            now_GR.variables.additional_information = additional_information;
+            now_GR.update();
+            
+            // 如果状态变为2，更新关联任务
+            if (now_GR.state == 2) {
+                var now_task = new GlideRecord("task");
+                now_task.get(taskid);
+                now_task.state = 2;
+                now_task.update();
+            }
+            
+        } catch (e) {
+            gs.error("GetDefaultVariables 异常：" + e);
+            return 'exception';
+        }
+    },
+    type: 'resubmitcatalogitem3'
+});]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2025-06-18 07:09:39</sys_created_on>
+        <sys_id>2e2fb6c0839ee650cfe0a470ceaad341</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>resubmitcatalogitem3</sys_name>
+        <sys_package display_value="Scripting" source="x_1755520_scriptin">203f384e83792690cfe0a470ceaad3b6</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Scripting">203f384e83792690cfe0a470ceaad3b6</sys_scope>
+        <sys_update_name>sys_script_include_2e2fb6c0839ee650cfe0a470ceaad341</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2025-06-18 07:09:39</sys_updated_on>
+    </sys_script_include>
+</record_update>

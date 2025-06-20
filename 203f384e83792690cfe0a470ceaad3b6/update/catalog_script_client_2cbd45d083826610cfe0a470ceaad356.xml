@@ -15,42 +15,42 @@
         <global>true</global>
         <isolate_script>true</isolate_script>
         <messages/>
-        <name>CatalogRequestOnsubmit3</name>
+        <name>resubmit3</name>
         <order/>
         <published_ref/>
         <script><![CDATA[function onSubmit() {
     // Type appropriate comment here, and begin script below
-    var item_id = getURLParam("req_item_id");
-    if(item_id != ""){
-        var question1 = g_form.getValue("question1");
-        var question2 = g_form.getValue("question2");
-        var question3 = g_form.getValue("question3");
-        
-        var ga = new GlideAjax("CatalogRequestUpdate3");
-        ga.addParam("sysparm_name", "updateReqItemData");
-        ga.addParam("req_item_id", item_id);
-        ga.addParam("question1", question1);
-        ga.addParam("question2", question2);
-        ga.addParam("question3", question3);
-        ga.getXMLAnswer(callBack);
-        return false; 
-    }
-}
+    var url = top.location.href;
 
-function callBack(response) {
-    if(response === "true") {
-        var URL = "sp?id=index";
-        top.window.onbeforeunload = null; 
-        top.location.href = URL; 
+    if (url.indexOf("number") < 0) {
+        return;
     }
-}
 
-function getURLParam(name) {
-    name = name.replace(/[$$]/, "\\[").replace(/[$$]/, "\\]");
-    var regexS = "[\\?&]" + name + "=([^&#]*)";
-    var regex = new RegExp(regexS);
-    var results = regex.exec(window.location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    // Requested item id
+    var value = url.split("number=");
+    
+    // Task id
+    var taskid;
+    
+    if (url.indexOf("taskid") < 0) {
+        taskid = '';
+    } else {
+        taskid = value[0].split("taskid=")[1].split("&")[0];
+    }
+
+    var ga = new GLideAjax("resubmitcatalogitem3");
+    ga.addParam("sysparm_name", "resubmitcatalogitemdaction");
+    ga.addParam("task_id", taskid);
+    ga.addParam("sys_id", value[1]);
+    ga.addParam("additional_information", g_form.getValue('additional_information'));
+    ga.getXML(setVars);
+
+    function setVars(response) {
+        var returnVariables = response.responseXML.documentElement.getAttribute("answer");
+        top.window.location.href = top.location.origin + "/sp?id=sc_cat_item&sys_id=3D6c87d828831a6a50cfe0a470ceaad380";
+        alert('Your request has been submitted');
+	}
+    return false;
 }]]></script>
         <sys_class_name>catalog_script_client</sys_class_name>
         <sys_created_by>admin</sys_created_by>
@@ -58,17 +58,17 @@ function getURLParam(name) {
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>2cbd45d083826610cfe0a470ceaad356</sys_id>
-        <sys_mod_count>2</sys_mod_count>
-        <sys_name>CatalogRequestOnsubmit3</sys_name>
+        <sys_mod_count>7</sys_mod_count>
+        <sys_name>resubmit3</sys_name>
         <sys_overrides/>
         <sys_package display_value="Scripting" source="x_1755520_scriptin">203f384e83792690cfe0a470ceaad3b6</sys_package>
         <sys_policy/>
         <sys_scope display_value="Scripting">203f384e83792690cfe0a470ceaad3b6</sys_scope>
         <sys_update_name>catalog_script_client_2cbd45d083826610cfe0a470ceaad356</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2025-06-06 07:19:04</sys_updated_on>
+        <sys_updated_on>2025-06-19 08:15:45</sys_updated_on>
         <table/>
-        <type/>
+        <type>onSubmit</type>
         <ui_type>10</ui_type>
         <va_supported>false</va_supported>
         <variable_set/>

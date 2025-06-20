@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element db_object_id="9bf0f97f8306a650cfe0a470ceaad32d" label="PC Detail1" max_length="40" name="x_1755520_scriptin_pc_detail1" type="collection">
+        <element label="assigner" max_length="32" name="assigner" reference="sys_user" type="reference"/>
+        <element label="pc number" max_length="40" name="pc_number" type="string"/>
+        <index name="index">
+            <element name="assigner"/>
+        </index>
+    </element>
+</database>
